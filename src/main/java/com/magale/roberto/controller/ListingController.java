@@ -37,7 +37,7 @@ public class ListingController {
     }
 
     @ResponseBody
-    @ResponseStatus(value = NO_CONTENT)
+    @ResponseStatus(value = OK)
     @RequestMapping(value = "/{id}", method = GET)
     public PropertyListing getListing(@PathVariable("id") String id) {
         try {
