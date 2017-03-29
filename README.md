@@ -28,19 +28,19 @@ A listing document is in the form
 
 ###Assumptions
 
-####Validation
+#### Validation
 * Address: all fields are mandatory except for `postalCode` and `state` as non US countries might not have 
             those information.
 * Contact: everything mandatory
 * Location: non mandatory
 
-###Scaling
+### Scaling
 The service cannot scale at the moment as the data is not centrally stored but each instance will have its own data.
 In order to be able to successfully scale the application, a centralised database is neede (based on the type of data, 
 probably a noSQL DB like mongodb or dynamoBD).
            
 
-###Running the Application
+### Running the Application
 
 * Running as a packaged application
 Application can be packaged using maven `mvn clean package` and then run using this java command
