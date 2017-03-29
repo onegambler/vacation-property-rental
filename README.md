@@ -1,4 +1,4 @@
-#Vacation Properties Rental
+# Vacation Properties Rental
 
 This project implements a CRUD service able to get, set, update and delete Property Listings.
 A listing document is in the form
@@ -26,7 +26,7 @@ A listing document is in the form
 }
 ```
 
-###Assumptions
+### Assumptions
 
 #### Validation
 * Address: all fields are mandatory except for `postalCode` and `state` as non US countries might not have 
