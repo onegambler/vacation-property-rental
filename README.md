@@ -26,7 +26,13 @@ A listing document is in the form
 }
 ```
 
-### Assumptions
+### Decisions
+
+### Libraries
+* Maven
+* I've used `Spring MVC` for the RESTful API implementation
+* No database used, replaced with an "InMemory" repository (used `ConcurrentHashMap` to avoid concurrency problems)
+* Used JUnit + AssertJ + Mockito for testing - Code coverage might not be great!
 
 #### Validation
 * Address: all fields are mandatory except for `postalCode` and `state` as non US countries might not have 
