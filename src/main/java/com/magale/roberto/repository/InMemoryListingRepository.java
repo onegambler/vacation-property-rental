@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.isNull;
 
 @org.springframework.stereotype.Repository
 public class InMemoryListingRepository implements Repository<String, PropertyListing> {
@@ -14,8 +15,15 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     private final Map<String, PropertyListing> propertiesMap = new ConcurrentHashMap<>();
 
     @Override
-    public PropertyListing get(String propertyId) {
-        return propertiesMap.get(propertyId);
+    public PropertyListing get(String id) {
+        checkNotNull(id, "propertyId cannot be null");
+        PropertyListing propertyListing = propertiesMap.get(id);
+        if (isNull(propertyListing)) {
+            String message = String.format("Property with Id %s does not exist", id);
+            throw new ListingNotFoundException(message);
+        }
+
+        return propertyListing;
     }
 
     @Override
@@ -27,7 +35,11 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     @Override
     public void delete(String propertyId) {
         checkNotNull(propertyId, "propertyId cannot be null");
-        propertiesMap.remove(propertyId);
+        PropertyListing removedObject = propertiesMap.remove(propertyId);
+        if (removedObject == null) {
+            String message = String.format("Property with Id %s does not exist", propertyId);
+            throw new ListingNotFoundException(message);
+        }
     }
 
     @Override

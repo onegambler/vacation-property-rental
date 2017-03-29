@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.Objects.isNull;
 
 @Service
 public class ListingService {
@@ -20,16 +19,23 @@ public class ListingService {
         this.listingRepository = listingRepository;
     }
 
+    /**
+     * Returns a property list based on the passed id. A {@link ListingNotFoundException}
+     * is thrown if PropertyListing does not exist.
+     *
+     * @param id id of the property list
+     * @return the PropertyList object corresponding to the passed id.
+     */
     public PropertyListing getListing(String id) {
-        PropertyListing propertyListing = listingRepository.get(id);
-        if (isNull(propertyListing)) {
-            String message = String.format("Impossible to find listing with id %s", id);
-            throw new ListingNotFoundException(message);
-        }
-
-        return propertyListing;
+        return listingRepository.get(id);
     }
 
+    /**
+     * Add a PropertyListing to the database. It will set a random UUID as ID.
+     *
+     * @param propertyListing property listing to store. Cannot be null.
+     * @return the stored property listing.
+     */
     public PropertyListing addListing(PropertyListing propertyListing) {
         checkNotNull(propertyListing, "propertyListing cannot be null");
         String listingID = UUID.randomUUID().toString();
@@ -46,14 +52,22 @@ public class ListingService {
         return storedPropertyListing;
     }
 
+    /**
+     * Updates an existing property listing, based on the passed id. Both id an property listing cannot be null.
+     *
+     * @param id              the id of the property listing to update
+     * @param propertyListing the property listing to update
+     * @return the updated property listing
+     */
     public PropertyListing updateListing(String id, PropertyListing propertyListing) {
         checkNotNull(propertyListing, "propertyListing cannot be null");
         this.listingRepository.update(id, propertyListing);
         return propertyListing;
     }
 
+
     public void deleteListing(String id) {
-        checkNotNull(id, "listing id cannot be null");
+        checkNotNull(id, "propertyListing cannot be null");
         this.listingRepository.delete(id);
     }
 }

@@ -35,7 +35,7 @@ A listing document is in the form
 * Location: non mandatory
 
 ### Scaling
-The service cannot scale at the moment as the data is not centrally stored but each instance will have its own data.
+The service cannot scale at the moment as the data is not centrally stored: each instance will have its own data.
 In order to be able to successfully scale the application, a centralised database is neede (based on the type of data, 
 probably a noSQL DB like mongodb or dynamoBD).
            

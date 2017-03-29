@@ -1,7 +1,5 @@
 package com.magale.roberto.repository;
 
-import java.util.Collection;
-
 public interface Repository<K, T> {
 
     T get(K key);

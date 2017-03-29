@@ -1,18 +1,68 @@
 package com.magale.roberto.repository;
 
-import com.magale.roberto.model.Address;
-import com.magale.roberto.model.Contact;
-import com.magale.roberto.model.Listing;
-import com.magale.roberto.model.Location;
+import com.magale.roberto.exceptions.ListingNotFoundException;
 import com.magale.roberto.model.PropertyListing;
 import org.junit.Test;
 
+import static com.magale.roberto.PropertyListingDataUtil.TEST_ID;
+import static com.magale.roberto.PropertyListingDataUtil.createTestPropertyListing;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class InMemoryListingRepositoryTest {
 
-    private static final String TEST_ID = "id";
     private InMemoryListingRepository repository = new InMemoryListingRepository();
+
+    @Test
+    public void whenKeyIsNullThenGetThrowsAnException() {
+        assertThatThrownBy(() -> repository.get(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("propertyId cannot be null");
+    }
+
+    @Test
+    public void whenKeyIsNullThenUpdateThrowsAnException() {
+        PropertyListing toUpdate = createTestPropertyListing("address");
+        assertThatThrownBy(() -> repository.update(null, toUpdate))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("propertyId cannot be null");
+    }
+
+    @Test
+    public void whenListingIsNullThenUpdateThrowsAnException() {
+        assertThatThrownBy(() -> repository.update("key", null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("PropertyListing cannot be null");
+    }
+
+    @Test
+    public void whenKeyIsNullThenDeleteThrowsAnException() {
+        assertThatThrownBy(() -> repository.delete(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("propertyId cannot be null");
+    }
+
+    @Test
+    public void whenPassedKeyDoesNotCorrespondToAnyListingThenDeleteThrowAnException() {
+        assertThatThrownBy(() -> repository.delete("not_existing"))
+                .isInstanceOf(ListingNotFoundException.class)
+                .hasMessage("Property with Id not_existing does not exist");
+    }
+
+    @Test
+    public void whenPassedKeyDoesNotCorrespondToAnyListingThenGetThrowAnException() {
+        assertThatThrownBy(() -> repository.get("not_existing"))
+                .isInstanceOf(ListingNotFoundException.class)
+                .hasMessage("Property with Id not_existing does not exist");
+    }
+
+    @Test
+    public void whenPassedKeyDoesNotCorrespondToAnyListingThenUdateThrowAnException() {
+        PropertyListing toUpdate = createTestPropertyListing("address");
+        assertThatThrownBy(() -> repository.update("not_existing", toUpdate))
+                .isInstanceOf(ListingNotFoundException.class)
+                .hasMessage("Property with Id not_existing does not exist");
+    }
 
     @Test
     public void addMethodProperlyStoresAPropertyListing() {
@@ -30,7 +80,8 @@ public class InMemoryListingRepositoryTest {
 
         repository.delete(TEST_ID);
 
-        assertThat(repository.get(TEST_ID)).isNull();
+        assertThatThrownBy(() -> repository.get(TEST_ID))
+                .isInstanceOf(ListingNotFoundException.class);
     }
 
     @Test
@@ -45,23 +96,5 @@ public class InMemoryListingRepositoryTest {
         assertThat(repository.get(TEST_ID)).isEqualTo(otherPropertyListing);
     }
 
-    private PropertyListing createTestPropertyListing(String addressString) {
-        Address address = Address.builder()
-                .withAddress(addressString)
-                .withCity("City")
-                .withCountry("Country")
-                .withCountryCode("Code")
-                .withPostalCode("PostalCode")
-                .withState("Stage")
-                .build();
-        Listing listing = Listing.builder()
-                .withAddress(address)
-                .withContact(new Contact("01010110", "+12"))
-                .withLocation(new Location(123D, 125D))
-                .withId(TEST_ID)
-                .build();
-
-        return new PropertyListing(listing);
-    }
 
 }
