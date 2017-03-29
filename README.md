@@ -46,7 +46,7 @@ probably a noSQL DB like mongodb or dynamoBD).
 Application can be packaged using maven `mvn clean package` and then run using this java command
 
     ```bash
-    $ java -jar target/myproject-0.0.1-SNAPSHOT.jar
+    $ java -jar target/vacation-properties-rental-0.0.1-SNAPSHOT.jar
     ```
 
 
