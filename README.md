@@ -30,7 +30,7 @@ A listing document is in the form
 
 ### Libraries
 * Maven
-* I've used `Spring MVC` for the RESTful API implementation
+* I've used `Spring Boot` and `Spring MVC` for the RESTful API implementation
 * No database used, replaced with an "InMemory" repository (used `ConcurrentHashMap` to avoid concurrency problems)
 * Used JUnit + AssertJ + Mockito for testing - Code coverage might not be great!
 
