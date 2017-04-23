@@ -64,3 +64,7 @@ The Spring Boot Maven plugin includes a run goal which can be used to quickly co
     $ mvn spring-boot:run
     ```
 
+The service will be available at the following endpoint
+```
+  http://127.0.0.1:8080/listings
+```
