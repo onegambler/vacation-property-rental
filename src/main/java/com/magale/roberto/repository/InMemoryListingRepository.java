@@ -1,6 +1,7 @@
 package com.magale.roberto.repository;
 
 import com.magale.roberto.exceptions.ListingNotFoundException;
+import com.magale.roberto.exceptions.ListingPersistenceException;
 import com.magale.roberto.model.PropertyListing;
 
 import java.util.Map;
@@ -28,7 +29,10 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     @Override
     public void add(PropertyListing propertyListing) {
         validateProperty(propertyListing);
-        propertiesMap.put(propertyListing.getListing().getId(), propertyListing);
+        PropertyListing current = propertiesMap.putIfAbsent(propertyListing.getListing().getId(), propertyListing);
+        if (current != null) {
+            throw new ListingPersistenceException("Listing already exists");
+        }
     }
 
     @Override
@@ -36,7 +40,6 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
         checkNotNull(propertyId, "propertyId cannot be null");
         if (propertiesMap.remove(propertyId) == null) {
             throw new ListingNotFoundException(propertyId);
-
         }
     }
 
@@ -44,7 +47,7 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     public void update(String propertyId, PropertyListing propertyListing) {
         checkNotNull(propertyId, "propertyId cannot be null");
         validateProperty(propertyListing);
-        if (propertiesMap.putIfAbsent(propertyId, propertyListing) == null) {
+        if (propertiesMap.computeIfPresent(propertyId, (k, v) -> propertyListing) == null) {
             throw new ListingNotFoundException(propertyId);
         }
 

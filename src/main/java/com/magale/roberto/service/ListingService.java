@@ -48,7 +48,7 @@ public class ListingService {
                 .build();
 
         PropertyListing storedPropertyListing = new PropertyListing(copyListing);
-        this.listingRepository.add(storedPropertyListing);
+        listingRepository.add(storedPropertyListing);
         return storedPropertyListing;
     }
 
@@ -61,13 +61,13 @@ public class ListingService {
      */
     public PropertyListing updateListing(String id, PropertyListing propertyListing) {
         checkNotNull(propertyListing, "propertyListing cannot be null");
-        this.listingRepository.update(id, propertyListing);
+        listingRepository.update(id, propertyListing);
         return propertyListing;
     }
 
 
     public void deleteListing(String id) {
         checkNotNull(id, "propertyListing cannot be null");
-        this.listingRepository.delete(id);
+        listingRepository.delete(id);
     }
 }
