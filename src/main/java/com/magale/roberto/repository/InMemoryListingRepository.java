@@ -15,12 +15,11 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     private final Map<String, PropertyListing> propertiesMap = new ConcurrentHashMap<>();
 
     @Override
-    public PropertyListing get(String id) {
-        checkNotNull(id, "propertyId cannot be null");
-        PropertyListing propertyListing = propertiesMap.get(id);
+    public PropertyListing get(String propertyId) {
+        checkNotNull(propertyId, "propertyId cannot be null");
+        PropertyListing propertyListing = propertiesMap.get(propertyId);
         if (isNull(propertyListing)) {
-            String message = String.format("Property with Id %s does not exist", id);
-            throw new ListingNotFoundException(message);
+            throw new ListingNotFoundException(propertyId);
         }
 
         return propertyListing;
@@ -35,10 +34,9 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     @Override
     public void delete(String propertyId) {
         checkNotNull(propertyId, "propertyId cannot be null");
-        PropertyListing removedObject = propertiesMap.remove(propertyId);
-        if (removedObject == null) {
-            String message = String.format("Property with Id %s does not exist", propertyId);
-            throw new ListingNotFoundException(message);
+        if (propertiesMap.remove(propertyId) == null) {
+            throw new ListingNotFoundException(propertyId);
+
         }
     }
 
@@ -46,11 +44,10 @@ public class InMemoryListingRepository implements Repository<String, PropertyLis
     public void update(String propertyId, PropertyListing propertyListing) {
         checkNotNull(propertyId, "propertyId cannot be null");
         validateProperty(propertyListing);
-        if (!propertiesMap.containsKey(propertyId)) {
-            String message = String.format("Property with Id %s does not exist", propertyId);
-            throw new ListingNotFoundException(message);
+        if (propertiesMap.putIfAbsent(propertyId, propertyListing) == null) {
+            throw new ListingNotFoundException(propertyId);
         }
-        propertiesMap.put(propertyId, propertyListing);
+
     }
 
     private void validateProperty(PropertyListing propertyListing) {
